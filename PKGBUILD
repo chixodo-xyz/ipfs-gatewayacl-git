@@ -1,73 +1,38 @@
 # Maintainer: Josias <aur at macherstube dot ch>
-_pkgname=kubo
-_pkgplgname=$_pkgname-s3
-pkgname=$_pkgplgname-git
-pkgver=0.22.0.r0.g3f884d3
+_pkgname=ipfs-gatewayacl
+pkgname=$_pkgname-git
+pkgver=0.0.2.r0.g9e0c226
 pkgrel=1
-pkgdesc="IPFS Kubo with S3 Datastore Implementation"
+pkgdesc="Gateway ACL for IPFS (Kubo)"
 arch=('x86_64')
-url="https://github.com/chixodo-xyz/kubo-s3"
+url="https://github.com/chixodo-xyz/ipfs-gatewayacl"
 license=('GPL3')
 groups=()
-depends=(glibc)
-makedepends=(go git)
-provides=("$_pkgplgname" "ipfs")
-conflicts=("$_pkgplgname" 'kubo' 'ipfs')
+depends=()
+makedepends=(git)
+optdepends=('openresty: Nginx Server with LUA Support'
+						'nginx: Nginx Server without LUA Support ')
+provides=("$_pkgname")
+conflicts=("$_pkgname")
 replaces=()
 backup=()
 options=()
 install=
-source=('git+https://github.com/ipfs/kubo.git'
-				'git+https://github.com/ipfs/go-ds-s3'
-				'versions.txt')
+source=('git+https://github.com/chixodo-xyz/ipfs-gatewayacl.git')
 noextract=()
-b2sums=('SKIP'
-				'SKIP'
-				'ba0b7a7ca53a069a58ec6f9dbab98f10120a5ffd2f8ce83fabf21ae8749e29151879d3245a8cf7e6380119c19a57114f7c4696dcaf93c3b712ad3c2eb1c78058')
+b2sums=('SKIP')
 
 prepare() {
 	cd "$srcdir/$_pkgname"
-	KuboVersion=$(git describe --tags --abbrev=0)
-	printf "\033[34;1mPrepare Kubo %s (%s)\n\033[0m" ${KuboVersion} $(git describe --long --tags --abbrev=7 --match="v*" HEAD |
+	version=$(git describe --tags --abbrev=0)
+	printf "\033[34;1mPrepare ipfs-gatewayacl %s (%s)\n\033[0m" ${version} $(git describe --long --tags --abbrev=7 --match="v*" HEAD |
 		sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
 	git config advice.detachedHead false
-	git checkout ${KuboVersion} -f
-
+	git checkout ${version} -f
 	if [ $? -ne 0 ]; then
 		printf "\033[31;1mTag not found.\n\033[0m"
 		exit -1
 	fi
-
-	GoVersion=$(grep "${KuboVersion} " ../versions.txt | awk '{ print $2 }')
-
-	if [ -z "$GoVersion" ]; then
-		govers=$(which go)
-	else
-		printf "\033[34;1mInstalling go version: %s\n\033[0m" ${GoVersion}
-
-		GOPATH=$(go env GOPATH)
-		GOROOT=$(go env GOROOT)
-		go install golang.org/dl/${GoVersion}@latest
-		govers=$GOPATH/bin/$GoVersion
-		$govers download
-		GOVERSIONROOT=$($govers env GOROOT)
-		GOVERSIONPATH=$($govers env GOPATH)
-
-		cp $GOROOT/go.env $GOVERSIONROOT/go.env
-
-		export GOROOT=$GOVERSIONROOT
-		export GOPATH=$GOVERSIONPATH
-	fi
-
-
-	export GO111MODULE=on
-
-	printf "\033[34;1mFetching go-ds-s3 plugin\n\033[0m"
-	$govers get github.com/ipfs/go-ds-s3/plugin@latest
-	echo -en "\ns3ds github.com/ipfs/go-ds-s3/plugin 0" >> plugin/loader/preload_list
-
-	sed -i "s\GOCC ?= go\GOCC ?= ${govers}\g" Rules.mk
-	sed -Ei "s/const CurrentVersionNumber = \"(.*)\"/const CurrentVersionNumber = \"\1-s3\"/g" version.go
 }
 
 pkgver() {
@@ -77,31 +42,38 @@ pkgver() {
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
-	printf "\033[34;1mBuild Kubo with S3 Plugin\n\033[0m"
-	make build
-	$govers mod tidy
-	make build
-
-	if [ $? -ne 0 ]; then
-		printf "\033[31;1mBuild failed.\n\033[0m"
-		exit -1
-	fi
+	printf "\033[0;33mNo building required...\n\033[0m"
 }
 
-check() {
-	cd "$srcdir/$_pkgname"
-	printf "\033[0;35mIPFS Version: $(cmd/ipfs/ipfs version)\n\033[0m"
-
-	if [ $? -ne 0 ]; then
-		printf "\033[31;1mCheck failed.\n\033[0m"
-		exit -1
-	fi
+check(){
+	printf "\033[0;33mNo checking required...\n\033[0m"
 }
 
 package() {
+	printf "\033[34;1mCreate Package\n\033[0m"
+
 	cd "$srcdir/$_pkgname"
-	mkdir -p $pkgdir/usr/bin
-	cp cmd/ipfs/ipfs $pkgdir/usr/bin/ipfs
-	printf "\033[36;1mBuild to: $pkgdir/usr/bin/ipfs\n\033[0m"
+	sourceDir=`realpath "$srcdir/$_pkgname"`
+	luaDir="/lib/lua/5.1"
+	configDir="/etc/$_pkgname"
+	destDir="/usr/share/$_pkgname"
+	binaryDir="/usr/bin/"
+
+	printf "Source: %s\n" $sourceDir
+	printf "Destination: %s\n" $pkgdir
+
+	printf "\033[34;1mPrepare folders\n\033[0m"
+	printf "LuaLib: %s\n" "$pkgdir$luaDir"
+	mkdir -p "$pkgdir$luaDir"
+	printf "Config: %s\n" "$pkgdir$configDir"
+	mkdir -p "$pkgdir$configDir"
+	printf "Dest:   %s\n" "$pkgdir$destDir"
+	mkdir -p "$pkgdir$destDir"
+	printf "Binary: %s\n" "$pkgdir$binaryDir"
+	mkdir -p "$pkgdir$binaryDir"
+
+	printf "\033[34;1mPopulating folders\n\033[0m"
+	cp $sourceDir/lib/* $pkgdir$luaDir/
+	cp $sourceDir/config/* $pkgdir$configDir/
+	cp $sourceDir/src/* $pkgdir$destDir/
 }
