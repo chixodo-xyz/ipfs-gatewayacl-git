@@ -16,7 +16,7 @@ post_install() {
 
 	printf "Also remember to configure IPFS-GatewayACL:\n\n"
 
-	printf "\033[0;34msudo cd /opt/ipfs-gatewayacl/config/default.example.json /opt/ipfs-gatewayacl/config/default.json\n\033[0m"
+	printf "\033[0;34msudo cp /opt/ipfs-gatewayacl/config/default.example.json /opt/ipfs-gatewayacl/config/default.json\n\033[0m"
 	printf "\033[0;34msudo nano /opt/ipfs-gatewayacl/config/default.json\n\n\033[0m"
 
   printf "You are also able to use the cli tool ipfs-gatewayacl! Try:\n\n"
