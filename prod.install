@@ -1,9 +1,3 @@
-# arg 1:  the new package version
-#pre_install() {
-	# do something here
-#}
-
-# arg 1:  the new package version
 post_install() {
 	ln -s /opt/ipfs-gatewayacl/src/ipfs-gatewayacl /opt/ipfs-gatewayacl/ipfs-gatewayacl
 	ln -s /opt/ipfs-gatewayacl/ipfs-gatewayacl /usr/local/bin/ipfs-gatewayacl
@@ -16,31 +10,13 @@ post_install() {
 
 	printf "Also remember to configure IPFS-GatewayACL:\n\n"
 
-	printf "\033[0;34msudo cp /opt/ipfs-gatewayacl/config/default.example.json /opt/ipfs-gatewayacl/config/default.json\n\033[0m"
-	printf "\033[0;34msudo nano /opt/ipfs-gatewayacl/config/default.json\n\n\033[0m"
+	printf "\033[0;34msudo ipfs-gatewayacl config init\n\033[0m"
+	printf "\033[0;34msudo ipfs-gatewayacl config edit\n\n\033[0m"
 
-  printf "You are also able to use the cli tool ipfs-gatewayacl! Try:\n\n"
-  printf "\033[0;34mipfs-gatewayacl help\n\033[0m"
+  printf "You are also able to use the cli tool ipfs-gatewayacl\n\n"
+  printf "\033[0;34mTry: ipfs-gatewayacl help\n\033[0m"
 }
 
-# arg 1:  the new package version
-# arg 2:  the old package version
-#pre_upgrade() {
-	# do something here
-#}
-
-# arg 1:  the new package version
-# arg 2:  the old package version
-#post_upgrade() {
-	# do something here
-#}
-
-## arg 1:  the old package version
-#pre_remove() {
-	# do something here
-#}
-
-# arg 1:  the old package version
 post_remove() {
 	# do something here
 	rm -rf /opt/ipfs-gatewayacl/ipfs-gatewayacl
