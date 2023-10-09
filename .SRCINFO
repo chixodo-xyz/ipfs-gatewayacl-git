@@ -1,6 +1,6 @@
 pkgbase = ipfs-gatewayacl-git
-	pkgdesc = Gateway ACL for IPFS (Kubo)
-	pkgver = 0.0.3.r0.gba57b61
+	pkgdesc = GatewayACL for IPFS (Kubo)
+	pkgver = 0.0.5.r0.gae11b95
 	pkgrel = 1
 	url = https://github.com/chixodo-xyz/ipfs-gatewayacl
 	install = prod.install
@@ -9,6 +9,8 @@ pkgbase = ipfs-gatewayacl-git
 	makedepends = git
 	depends = openresty
 	depends = bash
+	optdepends = nano
+	optdepends = sudo
 	provides = ipfs-gatewayacl
 	conflicts = ipfs-gatewayacl
 	source = git+https://github.com/chixodo-xyz/ipfs-gatewayacl.git
