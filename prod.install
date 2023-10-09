@@ -1,22 +1,31 @@
-## arg 1:  the new package version
+# arg 1:  the new package version
 #pre_install() {
 	# do something here
 #}
 
-## arg 1:  the new package version
+# arg 1:  the new package version
 post_install() {
-	printf "Add following line to the corresponding server{} part of your openresty nginx configuration:\n\n"
-	printf "test123"
+	ln -s /opt/ipfs-gatewayacl/src/ipfs-gatewayacl /opt/ipfs-gatewayacl/ipfs-gatewayacl
+	ln -s /opt/ipfs-gatewayacl/ipfs-gatewayacl /usr/local/bin/ipfs-gatewayacl
+
+	printf "\033[36;1m\nInstallation successfully!\n\033[0m"
+	printf "Now add following lines to the corresponding server{} part of your openresty nginx configuration:\n\n"
+
+	printf "\033[0;34mset $ipfs_gatewayacl_root \"/opt/ipfs-gatewayacl\";\n\033[0m"
+  printf "\033[0;34minclude /opt/ipfs-gatewayacl/src/ipfs-gatewayacl.nginx.conf;\n\n\033[0m"
+
+  printf "You are also able to use the cli tool ipfs-gatewayacl! Try:\n\n"
+  printf "\033[0;34mipfs-gatewayacl help\n\033[0m"
 }
 
-## arg 1:  the new package version
-## arg 2:  the old package version
+# arg 1:  the new package version
+# arg 2:  the old package version
 #pre_upgrade() {
 	# do something here
 #}
 
-## arg 1:  the new package version
-## arg 2:  the old package version
+# arg 1:  the new package version
+# arg 2:  the old package version
 #post_upgrade() {
 	# do something here
 #}
@@ -26,7 +35,9 @@ post_install() {
 	# do something here
 #}
 
-## arg 1:  the old package version
-#post_remove() {
+# arg 1:  the old package version
+post_remove() {
 	# do something here
-#}
+	rm -rf /opt/ipfs-gatewayacl/ipfs-gatewayacl
+	rm -rf /usr/local/bin/ipfs-gatewayacl
+}

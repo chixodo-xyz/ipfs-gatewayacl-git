@@ -1,14 +1,14 @@
 # Maintainer: Josias <aur at macherstube dot ch>
 _pkgname=ipfs-gatewayacl
 pkgname=$_pkgname-git
-pkgver=0.0.2.r0.g9e0c226
+pkgver=0.0.3.r0.gba57b61
 pkgrel=1
 pkgdesc="Gateway ACL for IPFS (Kubo)"
 arch=('x86_64')
 url="https://github.com/chixodo-xyz/ipfs-gatewayacl"
 license=('GPL3')
 groups=()
-depends=('openresty')
+depends=('openresty' 'bash')
 makedepends=(git)
 optdepends=()
 provides=("$_pkgname")
@@ -53,26 +53,27 @@ package() {
 
 	cd "$srcdir/$_pkgname"
 	sourceDir=`realpath "$srcdir/$_pkgname"`
-	luaDir="/lib/lua/5.1"
-	configDir="/etc/$_pkgname"
-	destDir="/usr/share/$_pkgname"
-	binaryDir="/usr/bin/"
+	binDir="/usr/local/bin"
+	luaLibDir="/opt/openresty/site/lualib"
+	destDir="/opt/$_pkgname"
 
 	printf "Source: %s\n" $sourceDir
 	printf "Destination: %s\n" $pkgdir
 
 	printf "\033[34;1mPrepare folders\n\033[0m"
-	printf "LuaLib: %s\n" "$pkgdir$luaDir"
-	mkdir -p "$pkgdir$luaDir"
-	printf "Config: %s\n" "$pkgdir$configDir"
-	mkdir -p "$pkgdir$configDir"
+	printf "Bin: %s\n" "$pkgdir$binDir"
+	mkdir -p "$pkgdir$binDir"
+	printf "LuaLib: %s\n" "$pkgdir$luaLibDir"
+	mkdir -p "$pkgdir$luaLibDir"
 	printf "Dest:   %s\n" "$pkgdir$destDir"
 	mkdir -p "$pkgdir$destDir"
-	printf "Binary: %s\n" "$pkgdir$binaryDir"
-	mkdir -p "$pkgdir$binaryDir"
+	mkdir -p "$pkgdir$destDir/src"
+	mkdir -p "$pkgdir$destDir/cache"
+	mkdir -p "$pkgdir$destDir/config"
+	mkdir -p "$pkgdir$destDir/logs"
 
 	printf "\033[34;1mPopulating folders\n\033[0m"
-	cp $sourceDir/lib/* $pkgdir$luaDir/
-	cp $sourceDir/config/* $pkgdir$configDir/
-	cp $sourceDir/src/* $pkgdir$destDir/
+	cp $sourceDir/lib/* $pkgdir$luaLibDir/
+	cp $sourceDir/src/* $pkgdir$destDir/src/
+	cp $sourceDir/config/* $pkgdir$destDir/config/
 }
