@@ -5,13 +5,17 @@ post_install() {
 	printf "\033[36;1m\nInstallation successfully!\n\033[0m"
 	printf "Now add following lines to the corresponding server{} part of your openresty nginx configuration:\n\n"
 
-	printf "\033[0;34mset $ipfs_gatewayacl_root \"/opt/ipfs-gatewayacl\";\n\033[0m"
+	printf "\033[0;34mset \$ipfs_gatewayacl_root \"/opt/ipfs-gatewayacl\";\n\033[0m"
   printf "\033[0;34minclude /opt/ipfs-gatewayacl/src/ipfs-gatewayacl.nginx.conf;\n\n\033[0m"
 
 	printf "Also remember to configure IPFS-GatewayACL:\n\n"
 
 	printf "\033[0;34msudo ipfs-gatewayacl config init\n\033[0m"
 	printf "\033[0;34msudo ipfs-gatewayacl config edit\n\n\033[0m"
+
+	printf "And to restart OpenResty:\n\n"
+
+	printf "\033[0;34msudo systemctl restart openresty\n\n\033[0m"
 
   printf "You are also able to use the cli tool ipfs-gatewayacl\n\n"
   printf "\033[0;34mTry: ipfs-gatewayacl help\n\033[0m"
