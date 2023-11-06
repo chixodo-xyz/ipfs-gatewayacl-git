@@ -1,7 +1,7 @@
 # Maintainer: Josias <aur at macherstube dot ch>
 _pkgname=ipfs-gatewayacl
 pkgname=$_pkgname-git
-pkgver=0.1.0.r0.g0ce60b3
+pkgver=0.1.2.r0.g491a51c
 pkgrel=1
 pkgdesc="GatewayACL for IPFS (Kubo)"
 arch=('x86_64')

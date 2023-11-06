@@ -1,6 +1,6 @@
 pkgbase = ipfs-gatewayacl-git
 	pkgdesc = GatewayACL for IPFS (Kubo)
-	pkgver = 0.1.0.r0.g0ce60b3
+	pkgver = 0.1.2.r0.g491a51c
 	pkgrel = 1
 	url = https://github.com/chixodo-xyz/ipfs-gatewayacl
 	install = prod.install
